@@ -3,9 +3,21 @@ services:
   collector:
     build: .
     volumes:
-      - .:/code
+      - ./src:/src
+      - ./images:/images
+    # working_dir: /code
+    # command: flask run
     environment:
-      FLASK_ENV: development
+      DIR_NAME: /images
+    #   STREAM_URL:  ${STREAM_URL}
+    #   FLASK_ENV: ${FLASK_ENV}
+    #   FLASK_APP: ${FLASK_APP}
+    #   FLASK_RUN_HOST: ${FLASK_RUN_HOST}
+    #   RECORD_FROM: ${RECORD_FROM}
+    #   RECORD_TO: ${RECORD_TO}
+    #   SCALE: ${SCALE}
+    #   CAPTURE_INTERVAL: ${CAPTURE_INTERVAL}
     restart: always
-    ports:
-      - "5000:5000"
+    # network_mode: "host" 
+    # ports:
+    #   - "5000:5000"

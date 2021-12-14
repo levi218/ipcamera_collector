@@ -1,9 +1,6 @@
-# syntax=docker/dockerfile:1
-FROM python:3.8-slim
-WORKDIR /code
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
+FROM jjanzic/docker-python3-opencv
 
+WORKDIR /
 RUN apt update
 RUN apt -y install build-essential libwrap0-dev libssl-dev libc-ares-dev uuid-dev xsltproc
 RUN apt-get update -qq \
@@ -12,12 +9,17 @@ RUN apt-get update -qq \
         gcc \
         python3-dev \
         mosquitto \
-        mosquitto-clients
+        mosquitto-clients 
 
+RUN python3 -c "import cv2; print(cv2.__version__)"
 RUN pip3 install --upgrade pip setuptools wheel
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 EXPOSE 5000
 COPY . .
+# RUN cat .env
+# RUN ls
+WORKDIR /src
+
 CMD ["flask", "run"]

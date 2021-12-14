@@ -2,23 +2,25 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 import sys
 import os
-# import logging
-# logging.basicConfig(level=logging.DEBUG)
+import logging
+logging.basicConfig(level=logging.DEBUG)
 import datetime
 import cv2
 
-dirname = 'myfolder'
+DIR_NAME = os.path.join(os.getcwd(), 'images') if os.environ.get("DIR_NAME", None) is None else os.environ.get("DIR_NAME", None)
 STREAM_URL = os.environ.get("STREAM_URL", None)
 if STREAM_URL is None:
     raise Exception("STREAM URL MUST NOT BE EMPTY")
-cap = cv2.VideoCapture(STREAM_URL)
+# cap = cv2.VideoCapture(STREAM_URL)
 
 def sensor():
     """ Function for test purposes. """
     print("Scheduler is alive!", flush=True)
+    print("Fetching from "+STREAM_URL)
+    cap = cv2.VideoCapture(STREAM_URL)
     current_hour = datetime.datetime.now().hour
-    if current_hour<int(os.environ.get("RECORD_FROM", 7)) or current_hour>int(os.environ.get("RECORD_TO", 19)):
-        return
+    # if current_hour<int(os.environ.get("RECORD_FROM", 7)) or current_hour>int(os.environ.get("RECORD_TO", 19)):
+    #     return
     filename = str(datetime.datetime.now().strftime('%Y%m%d-%H-%M-%S'))
     if cap.isOpened():
         ret, frame = cap.read()
@@ -35,16 +37,14 @@ def sensor():
             resized = cv2.resize(frame, dim, interpolation = cv2.INTER_AREA)
             # cv2.imshow('frame', frame)
             #The received "frame" will be saved. Or you can manipulate "frame" as per your needs.
-            name = "rec_frame"+str(filename)+".jpg"
-            save_path = os.path.normpath(os.path.join(os.getcwd(),dirname,name))
-            print(save_path)
+            name = str(filename)+".jpg"
+            save_path = os.path.normpath(os.path.join(DIR_NAME,name))
             if not cv2.imwrite(save_path, resized):
                 print("write image failed")
-        if cv2.waitKey(20) & 0xFF == ord('q'):
-            print("Failed")
-    # cap.release()
+    else:
+        print("connection failed!")
+    cap.release()
     # cv2.destroyAllWindows()
-    # logging.info("Scheduler is alive!2")
 
 app = Flask(__name__)
 
