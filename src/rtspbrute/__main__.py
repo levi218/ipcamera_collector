@@ -103,9 +103,9 @@ def main():
         logger.debug(
             f"Starting {args.screenshot_threads} threads of worker.screenshot_targets"
         )
-    screenshot_threads = start_threads(
-        args.screenshot_threads, worker.screenshot_targets, screenshot_queue
-    )
+    # screenshot_threads = start_threads(
+    #     args.screenshot_threads, worker.screenshot_targets, screenshot_queue
+    # )
 
     console.print("[green]Starting...\n")
 

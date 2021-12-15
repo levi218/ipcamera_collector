@@ -2,11 +2,11 @@ import logging
 from pathlib import Path
 from typing import List
 
-import av
+# import av
 
 from rtspbrute.modules.cli.output import console
 from rtspbrute.modules.rtsp import RTSPClient, Status
-from rtspbrute.modules.utils import escape_chars
+# from rtspbrute.modules.utils import escape_chars
 
 ROUTES: List[str]
 CREDENTIALS: List[str]
@@ -132,62 +132,62 @@ def _is_video_stream(stream):
     )
 
 
-def get_screenshot(rtsp_url: str, tries=1):
-    try:
-        with av.open(
-            rtsp_url,
-            options={
-                "rtsp_transport": "tcp",
-                "rtsp_flags": "prefer_tcp",
-                "stimeout": "3000000",
-            },
-            timeout=60.0,
-        ) as container:
-            stream = container.streams.video[0]
-            if _is_video_stream(stream):
-                file_name = escape_chars(f"{rtsp_url.lstrip('rtsp://')}.jpg")
-                file_path = PICS_FOLDER / file_name
-                stream.thread_type = "AUTO"
-                for frame in container.decode(video=0):
-                    frame.to_image().save(file_path)
-                    break
-                console.print(
-                    f"[bold]Captured screenshot for",
-                    f"[underline cyan]{rtsp_url}",
-                )
-                if logger_is_enabled:
-                    logger.debug(f"Captured screenshot for {rtsp_url}")
-                return file_path
-            else:
-                # There's a high possibility that this video stream is broken
-                # or something else, so we try again just to make sure.
-                if tries < MAX_SCREENSHOT_TRIES:
-                    container.close()
-                    tries += 1
-                    return get_screenshot(rtsp_url, tries)
-                else:
-                    if logger_is_enabled:
-                        logger.debug(
-                            f"Broken video stream or unknown issues with {rtsp_url}"
-                        )
-                    return
-    except (MemoryError, PermissionError, av.InvalidDataError) as e:
-        # These errors occur when there's too much SCREENSHOT_THREADS.
-        if logger_is_enabled:
-            logger.debug(f"Missed screenshot of {rtsp_url}: {repr(e)}")
-        # Try one more time in hope for luck.
-        if tries < MAX_SCREENSHOT_TRIES:
-            tries += 1
-            console.print(
-                f"[yellow]Retry to get a screenshot of the [underline]{rtsp_url}"
-            )
-            return get_screenshot(rtsp_url, tries)
-        else:
-            console.print(
-                f"[italic red]Missed screenshot of [underline]{rtsp_url}[/underline] - if you see this message a lot, consider reducing the number of screenshot threads",
-            )
-            return
-    except Exception as e:
-        if logger_is_enabled:
-            logger.debug(f"get_screenshot failed with {rtsp_url}: {repr(e)}")
-        return
+# def get_screenshot(rtsp_url: str, tries=1):
+#     try:
+#         with av.open(
+#             rtsp_url,
+#             options={
+#                 "rtsp_transport": "tcp",
+#                 "rtsp_flags": "prefer_tcp",
+#                 "stimeout": "3000000",
+#             },
+#             timeout=60.0,
+#         ) as container:
+#             stream = container.streams.video[0]
+#             if _is_video_stream(stream):
+#                 file_name = escape_chars(f"{rtsp_url.lstrip('rtsp://')}.jpg")
+#                 file_path = PICS_FOLDER / file_name
+#                 stream.thread_type = "AUTO"
+#                 for frame in container.decode(video=0):
+#                     frame.to_image().save(file_path)
+#                     break
+#                 console.print(
+#                     f"[bold]Captured screenshot for",
+#                     f"[underline cyan]{rtsp_url}",
+#                 )
+#                 if logger_is_enabled:
+#                     logger.debug(f"Captured screenshot for {rtsp_url}")
+#                 return file_path
+#             else:
+#                 # There's a high possibility that this video stream is broken
+#                 # or something else, so we try again just to make sure.
+#                 if tries < MAX_SCREENSHOT_TRIES:
+#                     container.close()
+#                     tries += 1
+#                     return get_screenshot(rtsp_url, tries)
+#                 else:
+#                     if logger_is_enabled:
+#                         logger.debug(
+#                             f"Broken video stream or unknown issues with {rtsp_url}"
+#                         )
+#                     return
+#     except (MemoryError, PermissionError, av.InvalidDataError) as e:
+#         # These errors occur when there's too much SCREENSHOT_THREADS.
+#         if logger_is_enabled:
+#             logger.debug(f"Missed screenshot of {rtsp_url}: {repr(e)}")
+#         # Try one more time in hope for luck.
+#         if tries < MAX_SCREENSHOT_TRIES:
+#             tries += 1
+#             console.print(
+#                 f"[yellow]Retry to get a screenshot of the [underline]{rtsp_url}"
+#             )
+#             return get_screenshot(rtsp_url, tries)
+#         else:
+#             console.print(
+#                 f"[italic red]Missed screenshot of [underline]{rtsp_url}[/underline] - if you see this message a lot, consider reducing the number of screenshot threads",
+#             )
+#             return
+#     except Exception as e:
+#         if logger_is_enabled:
+#             logger.debug(f"get_screenshot failed with {rtsp_url}: {repr(e)}")
+#         return

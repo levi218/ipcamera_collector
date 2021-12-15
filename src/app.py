@@ -15,10 +15,10 @@ from pathlib import Path
 from queue import Queue
 from typing import Callable, List
 
-import av
+# import av
 
-from rtspbrute.modules import attack, utils, worker
-from rtspbrute.modules.cli.input import parser
+from rtspbrute.modules import worker
+from rtspbrute.modules import attack
 from rtspbrute.modules.cli.output import console, progress_bar
 from rtspbrute.modules.rtsp import RTSPClient
 from rtspbrute.modules.utils import parse_input_line
@@ -47,7 +47,7 @@ def get_camera_ip():
     logger.setLevel(logging.DEBUG)
     # This disables ValueError from av module printing to console, but this also
     # means we won't get any logs from av, if they aren't FATAL or PANIC level.
-    av.logging.set_level(av.logging.FATAL)
+    # av.logging.set_level(av.logging.FATAL)
 
     # Progress output set up
     worker.PROGRESS_BAR = progress_bar
@@ -106,6 +106,7 @@ if STREAM_CREDENTIALS is None or STREAM_ROUTE is None:
     raise Exception("STREAM URL MUST NOT BE EMPTY")
 
 cap = None
+# cap = cv2.VideoCapture("rtsp://admin:admin@192.168.1.79:554/11", apiPreference=cv2.CAP_FFMPEG)
 
 def refresh_stream():
     global cap
