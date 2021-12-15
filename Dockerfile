@@ -1,4 +1,4 @@
-FROM jjanzic/docker-python3-opencv
+FROM borda/docker_python-opencv-ffmpeg:cpu-py3.9-cv4.5.4
 
 WORKDIR /
 RUN apt update

@@ -5,10 +5,11 @@ services:
     volumes:
       - ./src:/src
       - ./images:/images
-    # working_dir: /code
+    # working_dir: /src
     # command: flask run
     environment:
       DIR_NAME: /images
+      OPENCV_FFMPEG_CAPTURE_OPTIONS: rtsp_transport;tcp
     #   STREAM_URL:  ${STREAM_URL}
     #   FLASK_ENV: ${FLASK_ENV}
     #   FLASK_APP: ${FLASK_APP}
